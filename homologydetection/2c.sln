@@ -1,0 +1,116 @@
+private bool XThrough(int x, int y, bool bAdd) 
+        {
+            if (bAdd) 
+            {
+                for (int i = x; i < m_nCol; i++)
+                    if (m_map[y*m_nCol + i] != BLANK_STATE)
+                        return false;
+            }
+            else 
+            {
+                for (int i = 0; i <= x; i++)
+                    if (m_map[y*m_nCol + i] != BLANK_STATE)
+                        return false;
+            }
+            return true;
+        }
+        private bool YThrough(int x, int y, bool bAdd) 
+        {
+            if (bAdd) 
+            {
+                for (int i = y; i < m_nRow; i++)
+                    if (m_map[i*m_nCol + x] != BLANK_STATE)
+                        return false;
+            }
+            else 
+            {
+                for (int i = 0; i <= y; i++)
+                    if (m_map[i*m_nCol + x] != BLANK_STATE)
+                        return false;
+            }
+            return true;
+        }
+        
+        
+        
+        private bool main(int x1, int y1, int x2, int y2)
+        {
+            
+            if (x1 == x2)
+            {
+                if (X_Link(x1, y1, y2))
+                {
+                    LType = LinkType.LineType;
+                    return true;
+                }
+            }
+                
+            else if (y1 == y2)
+            {
+                if (Y_Link(x1, x2, y1))
+                {
+                    LType = LinkType.LineType;
+                    return true;
+                }
+            }
+            
+            if (OneCornerLink(x1, y1, x2, y2))
+            {
+                LType = LinkType.OneCornerType;
+                return true;
+            }
+                
+            else if (TwoCornerLink(x1, y1, x2, y2))
+            {
+                LType = LinkType.TwoCornerType;
+                return true;
+            }
+            return false;
+        }
+        private bool Find2Block()
+        {
+            bool bFound = false;
+            
+            for (int i = 0; i < m_nRow*m_nCol; i++)
+            {
+                
+                if (bFound)
+                    break;
+                
+                if (m_map[i] == BLANK_STATE)
+                    continue;
+                
+                for (int j = i + 1; j < m_nRow*m_nCol; j++)
+                {
+                    
+                    if (m_map[j] != BLANK_STATE && m_map[i] == m_map[j])
+                    {
+                        
+                        x1 = i%m_nCol;
+                        y1 = i/m_nCol;
+                        x2 = j%m_nCol;
+                        y2 = j/m_nCol;
+                        
+                        if (IsLink(x1, y1, x2, y2))
+                        {
+                            bFound = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (bFound)
+            {
+                
+                Graphics g = pictureBox1.CreateGraphics(); 
+                
+                
+                
+                Pen myPen = new Pen(Color.Blue, 3);
+                Rectangle b1 = new Rectangle(x1*W + 1 + W, y1*W + 1 + W, W - 3, W - 3);
+                g.DrawRectangle(myPen, b1);
+                Rectangle b2 = new Rectangle(x2*W + 1 + W, y2*W + 1 + W, W - 3, W - 3);
+                g.DrawRectangle(myPen, b2);
+            }
+            return bFound;
+        }

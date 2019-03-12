@@ -1,0 +1,33 @@
+digraph G{
+	rankdir=LR;
+	size="1920,1080";
+	node [fontsize=16,fontcolor=blue,style=filled,fillcolor=Wheat,shape=box];
+	"main" -> "fopen";
+	"main" -> "printf";
+	"main" -> "RandomFile ";
+	"RandomFile " -> "srand";
+	"RandomFile " -> "time";
+	"RandomFile " -> "rand";
+	"RandomFile " -> "fputc";
+	"main" -> "fclose";
+	"main" -> "FileInput ";
+	"FileInput " -> "fseek";
+	"FileInput " -> "ftell";
+	"FileInput " -> "malloc";
+	"FileInput " -> "rewind";
+	"FileInput " -> "fread";
+	"main" -> "Y2 ";
+	"Y2 " -> "strlen";
+	"main" -> "free";
+	"main" -> "strlen";
+	"main" -> "ForDiffer ";
+	"main" -> "malloc";
+	"main" -> "SPN ";
+	"SPN " -> "SBox ";
+	"SBox " -> "printf";
+	"SPN " -> "PReplace ";
+	"PReplace " -> "printf";
+	"PReplace " -> "strcpy";
+	"main" -> "ToHex ";
+	"main" -> "fwrite";
+}

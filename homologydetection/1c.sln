@@ -1,0 +1,218 @@
+       public Form1()
+        {
+            InitializeComponent();
+        }
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            Source = (Bitmap) Image.FromFile("..\\..\\res\\animal.bmp");
+            pictureBox1.Height = W*(m_nRow + 2);
+            pictureBox1.Width = W*(m_nCol + 2);
+            pictureBox1.Top = 0;
+            pictureBox1.Left = 0;
+            
+            int d = (Height - ClientRectangle.Height);
+            Height = pictureBox1.Height + pictureBox1.Top + d;
+            Width = pictureBox1.Width + pictureBox1.Left;
+            
+            
+            
+            
+            StartNewGame();
+            Init_Graphic();
+        }
+        private void StartNewGame()
+        {
+            
+            for (int iNum = 0; iNum < (m_nCol*m_nRow); iNum++)
+            {
+                m_map[iNum] = BLANK_STATE;
+            }
+            Random r = new Random();
+            
+            
+            ArrayList tmpMap = new ArrayList();
+            for (int i = 0; i < (m_nCol*m_nRow)/4; i++)
+                for (int j = 0; j < 4; j++)
+                    tmpMap.Add(i);
+            
+            
+            for (int i = 0; i < m_nRow*m_nCol; i++)
+            {
+                
+                int nIndex = r.Next()%tmpMap.Count;
+                
+                m_map[i] = (int) tmpMap[nIndex];
+                
+                tmpMap.RemoveAt(nIndex);
+            }
+        }
+        private void Init_Graphic()
+        {
+            Graphics g = get_Graphic(); 
+            for (int i = 0; i < 10*10; i++)
+            {
+                g.DrawImage(create_image(m_map[i]), W*(i%GameSize) + W,
+                            W*(i/GameSize) + W, W, W);
+            }
+        }
+        private Graphics get_Graphic()
+        {
+            if (pictureBox1.Image == null)
+            {
+                Bitmap bmp = new Bitmap(pictureBox1.Width, pictureBox1.Height);
+                pictureBox1.Image = bmp;
+            }
+            Graphics g = Graphics.FromImage(pictureBox1.Image);
+            return g;
+        }
+        public Graphics GetGraphicsObject(ref PictureBox pic)
+        {
+            Graphics g;
+            Bitmap bmp = new Bitmap(pic.Width, pic.Height);
+            pic.Image = bmp;
+            g = Graphics.FromImage(bmp);
+            return g;
+        }
+        
+        private Bitmap create_image(int n) 
+        {
+            Bitmap bit = new Bitmap(W, W);
+            Graphics g = Graphics.FromImage(bit); 
+            Rectangle a = new Rectangle(0, 0, W, W);
+            Rectangle b = new Rectangle(0, n*39, 39, 39);
+            
+            g.DrawImage(Source, a, b, GraphicsUnit.Pixel);
+            return bit;
+        }
+        
+        private bool IsWin()
+        {
+            
+            
+            for (int i = 0; i < m_nRow*m_nCol; i++)
+            {
+                if (m_map[i] != BLANK_STATE)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        private bool IsSame(int x1, int y1, int x2, int y2)
+        {
+            if (m_map[y1*m_nCol + x1] == m_map[y2*m_nCol + x2])
+                return true;
+            else
+                return false;
+        }
+        
+        
+        
+        private bool X_Link(int x, int y1, int y2)
+        {
+            
+            if (y1 > y2)
+            {
+                
+                int n = y1;
+                y1 = y2;
+                y2 = n;
+            }
+            
+            for (int i = y1 + 1; i <= y2; i++)
+            {
+                if (i == y2)
+                    return true;
+                if (m_map[i*m_nCol + x] != BLANK_STATE)
+                    break;
+            }
+            return false;
+        }
+        
+        
+        
+        private bool Y_Link(int x1, int x2, int y)
+        {
+            if (x1 > x2)
+            {
+                int x = x1;
+                x1 = x2;
+                x2 = x;
+            }
+            
+            for (int i = x1 + 1; i <= x2; i++)
+            {
+                if (i == x2)
+                    return true;
+                if (m_map[y*m_nCol + i] != BLANK_STATE)
+                    break;
+            }
+            return false;
+        }
+        
+        
+        
+        private bool main(int x1, int y1, int x2, int y2)
+        {
+            if (x1 > x2) 
+            {
+                int n = x1;
+                x1 = x2;
+                x2 = n;
+                n = y1;
+                y1 = y2;
+                y2 = n;
+            }
+            if (y2 < y1) 
+            {
+                
+                if (m_map[y1*m_nCol + x2] == BLANK_STATE)
+                {
+                    if (Y_Link(x1, x2, y1) && X_Link(x2, y1, y2))
+                        
+                    {
+                        z1.X = x2;
+                        z1.Y = y1; 
+                        return true;
+                    }
+                }
+                
+                if (m_map[y2*m_nCol + x1] == BLANK_STATE)
+                {
+                    if (Y_Link(x2, x1, y2) && X_Link(x1, y2, y1))
+                        
+                    {
+                        z1.X = x1;
+                        z1.Y = y2; 
+                        return true;
+                    }
+                }
+                return false;
+            }
+            else 
+            {
+                
+                if (m_map[y2*m_nCol + x1] == BLANK_STATE)
+                {
+                    if (Y_Link(x1, x2, y2) && X_Link(x1, y1, y2))
+                        
+                    {
+                        z1.X = x1;
+                        z1.Y = y2; 
+                        return true;
+                    }
+                }
+                
+                if (m_map[y1*m_nCol + x2] == BLANK_STATE)
+                {
+                    if (Y_Link(x1, x2, y1) && X_Link(x2, y1, y2))
+                        
+                    {
+                        z1.X = x2;
+                        z1.Y = y1; 
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }

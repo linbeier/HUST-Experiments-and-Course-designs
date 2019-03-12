@@ -1,0 +1,18 @@
+<RCC>
+    <qresource prefix="/Users/bin/Desktop/2048/2048re/image"/>
+    <qresource prefix="/">
+        <file>image/right.png</file>
+        <file>image/down.png</file>
+        <file>image/up.png</file>
+        <file>image/left.png</file>
+        <file>image/leftclick.png</file>
+        <file>image/upclick.png</file>
+        <file>image/downclick.png</file>
+        <file>image/rightclick.png</file>
+        <file>../../橋本由香利 - キ・メ・ゼ・リ・フ.mp3</file>
+        <file>image/2048bck.png</file>
+        <file>image/bck1.jpg</file>
+        <file>image/bck2.jpg</file>
+        <file>rankname</file>
+    </qresource>
+</RCC>
